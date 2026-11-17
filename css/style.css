@@ -1,0 +1,205 @@
+/* ==========================================================================
+   A Letter for V
+   --------------------------------------------------------------------------
+   Sections:  1. Base      2. Intro heading   3. Paper + letter
+              4. Quill     5. Controls        6. Responsive    7. Print
+   ========================================================================== */
+
+/* -------------------------------------------------- 1. Base -------------- */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 28px 14px;
+  display: grid;
+  place-items: center;
+  color: #39291f;
+  background: radial-gradient(ellipse at center, #514034 0%, #211914 75%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.scene { width: min(900px, 100%); }
+
+/* -------------------------------------------------- 2. Intro ------------- */
+
+.intro {
+  text-align: center;
+  color: #ead9b8;
+  margin: 0 auto 22px;
+}
+
+.eyebrow {
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  font-size: 11px;
+  opacity: .8;
+}
+
+.intro h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(42px, 8vw, 68px);
+  font-weight: 400;
+  margin: 8px 0 4px;
+}
+
+.intro p {
+  font-style: italic;
+  font-size: 17px;
+  margin: 0;
+  opacity: .85;
+}
+
+/* -------------------------------------------------- 3. Paper ------------- */
+
+.letter-wrap {
+  position: relative;
+  padding: clamp(22px, 5vw, 58px);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(255,255,255,.55), transparent 35%),
+    radial-gradient(ellipse at 90% 85%, rgba(128,77,35,.12), transparent 42%),
+    repeating-linear-gradient(0deg, rgba(110,76,43,.025) 0 1px, transparent 1px 4px),
+    #ead8b3;
+  border: 1px solid rgba(88,56,31,.6);
+  box-shadow: 0 24px 70px rgba(0,0,0,.5), inset 0 0 55px rgba(126,79,38,.17);
+}
+
+.letter-wrap::before,
+.letter-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(116,78,43,.22);
+  pointer-events: none;
+}
+
+.letter-wrap::after { inset: 15px; border-color: rgba(255,255,255,.28); }
+
+.letter-head {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.ornament { color: #9a7047; font-size: 20px; letter-spacing: .5em; }
+
+.letter-head h2 {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(35px, 7vw, 52px);
+  font-weight: 400;
+  margin: 5px 0 0;
+}
+
+.letter-head small {
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-size: 10px;
+  color: #866747;
+}
+
+/* The letter starts invisible and empty. The script caches every word,
+   empties the paragraphs, then makes this container visible so the quill
+   writes onto a blank sheet. Nothing is ever painted before that.       */
+.letter-body {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: auto;
+  min-height: 40vh;
+  visibility: hidden;
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: clamp(17px, 2.6vw, 21px);
+  line-height: 1.72;
+}
+
+.letter-body.ready { visibility: visible; }
+
+.line { margin: 0 0 12px; white-space: pre-wrap; }
+.line.blank { min-height: .7em; margin: 0; }
+
+.signature {
+  font-family: 'Great Vibes', cursive;
+  font-size: 34px;
+  color: #593b2c;
+  margin-top: 12px;
+}
+
+/* -------------------------------------------------- 4. Quill ------------- */
+
+.quill {
+  position: absolute;
+  z-index: 5;
+  width: 108px;
+  height: 108px;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(3px 5px 3px rgba(44,25,13,.28));
+  will-change: left, top, transform;
+}
+
+.quill.visible { opacity: 1; }
+.quill svg { width: 100%; height: 100%; overflow: visible; }
+.quill.floating { animation: gentleHover .85s ease-in-out infinite alternate; }
+
+@keyframes gentleHover {
+  from { margin-top: -3px; }
+  to   { margin-top: 3px; }
+}
+
+/* -------------------------------------------------- 5. Controls ---------- */
+
+.controls { text-align: center; margin-top: 22px; }
+
+button {
+  border: 1px solid #c6a878;
+  background: linear-gradient(#ead8b3, #d7bd8e);
+  color: #39291f;
+  padding: 13px 28px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  letter-spacing: .08em;
+  box-shadow: 0 5px 18px rgba(0,0,0,.25);
+  transition: transform .2s, filter .2s;
+}
+
+button:hover { transform: translateY(-2px); filter: brightness(1.07); }
+button:disabled { opacity: .7; cursor: wait; transform: none; }
+
+.hint {
+  color: #e5d3b4;
+  opacity: .72;
+  font-size: 13px;
+  margin-top: 11px;
+  font-style: italic;
+}
+
+/* -------------------------------------------------- 6. Responsive -------- */
+
+@media (max-width: 560px) {
+  .letter-wrap { padding: 26px 22px; }
+  .letter-head { margin-bottom: 22px; }
+  .letter-body { line-height: 1.62; }
+  .quill { width: 82px; height: 82px; }
+}
+
+/* Honour a reader who has asked for less movement: the script skips the
+   typing animation entirely and this stills the hovering quill.        */
+@media (prefers-reduced-motion: reduce) {
+  .quill.floating { animation: none; }
+}
+
+/* -------------------------------------------------- 7. Print ------------- */
+
+@media print {
+  body { background: white; padding: 0; }
+  .intro, .controls, .quill { display: none; }
+  .letter-wrap { box-shadow: none; border: 0; }
+  .letter-body { visibility: visible; min-height: 0; }
+}
